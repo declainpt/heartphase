@@ -1,1 +1,1 @@
-# heartphase
+# Heartphase: A coherence standard
