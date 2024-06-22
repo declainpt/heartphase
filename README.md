@@ -7,3 +7,5 @@ Follow on 𝕏:
 Contribute:
 
 Donate to the project:
+
+Contact: heartphase [at] declain [dot] com
