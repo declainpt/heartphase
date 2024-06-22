@@ -4,4 +4,6 @@ Read working paper:
 
 Follow on 𝕏:
 
-Support the project:
+Contribute:
+
+Donate to the project:
