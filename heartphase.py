@@ -1,4 +1,5 @@
 """
+Heartphase 0.0.3
 Copyright (c) 2024 Declain P. Thomas
 Distributed under the MIT software license.
 """
@@ -8,11 +9,9 @@ import pandas as pd
 import scipy.signal as signal
 import matplotlib.pyplot as plt
 
-# Load ECG data from CSV
 ecg_data = pd.read_csv('ecg-sample.csv')
 ecg_trace = ecg_data.iloc[:, 0].values
 
-# Parameters
 sampling_rate = 512  # Hz
 
 def find_heartbeats(ecg_trace, sampling_rate):
@@ -26,9 +25,11 @@ def find_heartbeats(ecg_trace, sampling_rate):
     return peaks
 
 def segment_heartbeats(ecg_trace, peaks, window_size):
-    return [ecg_trace[p - window_size//2:p + window_size//2] for p in peaks if p - window_size//2 >= 0 and p + window_size//2 < len(ecg_trace)]
+    segments = [ecg_trace[p - window_size//2:p + window_size//2] for p in peaks if p - window_size//2 >= 0 and p + window_size//2 < len(ecg_trace)]
+    reversed_segments = [seg[::-1] for seg in segments] 
+    return segments, reversed_segments
 
-# Compute pairwise phase locking value (PLV) of analytic signals of segmented heartbeat (after Hilbert transform)
+# Compute pairwise phase locking value (PLV) of analytic signals of segmented heartbeats (after Hilbert transform)
 def compute_phase_diff(signal1, signal2):
     analytic_signal1 = signal.hilbert(signal1)
     analytic_signal2 = signal.hilbert(signal2)
@@ -72,7 +73,7 @@ def create_phase_space_plot(ax, reconstructed_data, elev, azim, add_text=True):
 
 """
 # Plot Hilbert transform
-def plot_heartbeat_and_analytic_signal(heartbeat):
+def plot_heartbeat_and_analytic_signal(heartbeat, title_prefix=""):
     analytic_signal = signal.hilbert(heartbeat)
     instantaneous_phase = np.unwrap(np.angle(analytic_signal))
     amplitude_envelope = np.abs(analytic_signal)
@@ -85,7 +86,7 @@ def plot_heartbeat_and_analytic_signal(heartbeat):
     ax1 = fig.add_subplot(gs[0, 0])
     ax1.plot(t, heartbeat, label='Raw signal', color='black')
     ax1.set_ylabel('Amplitude')
-    ax1.set_title('Raw ECG Signal')
+    ax1.set_title(f'{title_prefix}Raw ECG Signal')
     ax1.legend()
     
     # Analytic signal
@@ -93,7 +94,7 @@ def plot_heartbeat_and_analytic_signal(heartbeat):
     ax2.plot(t, np.real(analytic_signal), label='Real part', color='black')
     ax2.plot(t, np.imag(analytic_signal), label='Imaginary part', color='green')
     ax2.set_ylabel('Amplitude')
-    ax2.set_title('Analytic Signal')
+    ax2.set_title(f'{title_prefix}Analytic Signal')
     ax2.legend()
     
     # Instantaneous phase
@@ -101,7 +102,7 @@ def plot_heartbeat_and_analytic_signal(heartbeat):
     ax3.plot(t, instantaneous_phase, label='Instantaneous phase', color='blue')
     ax3.set_xlabel('Time (s)')
     ax3.set_ylabel('Phase')
-    ax3.set_title('Instantaneous Phase')
+    ax3.set_title(f'{title_prefix}Instantaneous Phase')
     ax3.legend()
     
     # Amplitude envelope
@@ -109,7 +110,7 @@ def plot_heartbeat_and_analytic_signal(heartbeat):
     ax4.plot(t, amplitude_envelope, label='Amplitude envelope', color='red')
     ax4.set_xlabel('Time (s)')
     ax4.set_ylabel('Amplitude')
-    ax4.set_title('Amplitude Envelope')
+    ax4.set_title(f'{title_prefix}Amplitude Envelope')
     ax4.legend()
     
     # Polar plot
@@ -117,7 +118,7 @@ def plot_heartbeat_and_analytic_signal(heartbeat):
     theta = instantaneous_phase
     r = amplitude_envelope
     ax5.plot(theta, r, color='black')
-    ax5.set_title('Polar Plot of Analytic Signal')
+    ax5.set_title(f'{title_prefix}Polar Plot of Analytic Signal')
     ax5.set_rticks([])  # Remove radial ticks
     
     # Remove top and right spines, set bottom and left spines to gray
@@ -139,10 +140,10 @@ peaks = find_heartbeats(ecg_trace, sampling_rate)
 num_heartbeats = len(peaks)
 print(f"Number of detected heartbeats: {num_heartbeats}")
 
-# Segment the data into heartbeats
-heartbeat_segments = segment_heartbeats(ecg_trace, peaks, 2 * sampling_rate // 2)  # 1-second window
+# Segment the data into heartbeats and create time-reversed versions
+heartbeat_segments, reversed_heartbeat_segments = segment_heartbeats(ecg_trace, peaks, 2 * sampling_rate // 2)  # 1-second window
 
-# Calculate raw and normalised PLV for all pairs
+# Calculate raw and normalised PLV for all pairs of normal heartbeats
 all_raw_plvs = []
 all_norm_plvs = []
 for i in range(len(heartbeat_segments)):
@@ -153,7 +154,7 @@ for i in range(len(heartbeat_segments)):
         all_raw_plvs.append(raw)
         all_norm_plvs.append(norm)
 
-# Compute overall raw and normalised PLV
+# Compute overall raw and normalised PLV for normal heartbeats
 overall_phase_diff = []
 for i in range(len(heartbeat_segments) - 1):
     for j in range(i + 1, len(heartbeat_segments)):
@@ -164,11 +165,68 @@ overall_phase_diff = np.array(overall_phase_diff)
 raw_plv_all = raw_plv(overall_phase_diff)
 norm_plv_all = normalised_plv(overall_phase_diff, num_heartbeats)
 
-# Print the raw and normalised PLVs
+# Print the raw and normalised PLVs for normal heartbeats
+print("Normal Heartbeats:")
 print(f"Raw PLV for each pair of heartbeats: {all_raw_plvs}")
 print(f"Normalised PLV for each pair of heartbeats: {all_norm_plvs}")
 print(f"Overall raw PLV for all heartbeats: {raw_plv_all}")
 print(f"Overall normalised PLV for all heartbeats: {norm_plv_all}")
+
+# Calculate raw and normalised PLV for all pairs of time-reversed heartbeats
+reversed_all_raw_plvs = []
+reversed_all_norm_plvs = []
+for i in range(len(reversed_heartbeat_segments)):
+    for j in range(i + 1, len(reversed_heartbeat_segments)):
+        phase_diff = compute_phase_diff(reversed_heartbeat_segments[i], reversed_heartbeat_segments[j])
+        raw = raw_plv(phase_diff)
+        norm = normalised_plv(phase_diff, 2)
+        reversed_all_raw_plvs.append(raw)
+        reversed_all_norm_plvs.append(norm)
+
+# Compute overall raw and normalised PLV for time-reversed heartbeats
+reversed_overall_phase_diff = []
+for i in range(len(reversed_heartbeat_segments) - 1):
+    for j in range(i + 1, len(reversed_heartbeat_segments)):
+        phase_diff = compute_phase_diff(reversed_heartbeat_segments[i], reversed_heartbeat_segments[j])
+        reversed_overall_phase_diff.extend(phase_diff)
+
+reversed_overall_phase_diff = np.array(reversed_overall_phase_diff)
+reversed_raw_plv_all = raw_plv(reversed_overall_phase_diff)
+reversed_norm_plv_all = normalised_plv(reversed_overall_phase_diff, num_heartbeats)
+
+# Print the raw and normalised PLVs for time-reversed heartbeats
+print("\nTime-Reversed Heartbeats:")
+print(f"Raw PLV for each pair of time-reversed heartbeats: {reversed_all_raw_plvs}")
+print(f"Normalised PLV for each pair of time-reversed heartbeats: {reversed_all_norm_plvs}")
+print(f"Overall raw PLV for all time-reversed heartbeats: {reversed_raw_plv_all}")
+print(f"Overall normalised PLV for all time-reversed heartbeats: {reversed_norm_plv_all}")
+
+def are_plvs_equal(plv1, plv2, tolerance=1e-12):
+    return abs(plv1 - plv2) < tolerance
+
+print("\nComparing PLVs:")
+different_pairs = []
+for i in range(len(all_raw_plvs)):
+    if not are_plvs_equal(all_raw_plvs[i], reversed_all_raw_plvs[i]):
+        different_pairs.append((i, all_raw_plvs[i], reversed_all_raw_plvs[i]))
+
+if different_pairs:
+    print(f"Found {len(different_pairs)} pairs with different PLVs:")
+    for pair, normal_plv, reversed_plv in different_pairs:
+        print(f"Pair {pair}: Normal PLV = {normal_plv:.15f}, Reversed PLV = {reversed_plv:.15f}")
+else:
+    print("All pairs have effectively identical PLVs.")
+
+print("\nOverall comparison:")
+if are_plvs_equal(raw_plv_all, reversed_raw_plv_all):
+    print("Overall raw PLVs are effectively identical")
+else:
+    print(f"Overall raw PLVs differ: Normal = {raw_plv_all:.15f}, Reversed = {reversed_raw_plv_all:.15f}")
+
+if are_plvs_equal(norm_plv_all, reversed_norm_plv_all):
+    print("Overall normalized PLVs are effectively identical")
+else:
+    print(f"Overall normalized PLVs differ: Normal = {norm_plv_all:.15f}, Reversed = {reversed_norm_plv_all:.15f}")
 
 # Parameters for phase space reconstruction
 dimension = 3
@@ -181,8 +239,8 @@ reconstructed_data = phase_space_reconstruct(ecg_trace, dimension, time_delay)
 fig1 = plt.figure(figsize=(10, 8))
 ax1 = fig1.add_subplot(111, projection='3d')
 create_phase_space_plot(ax1, reconstructed_data, elev=20, azim=45)
-fig1.text(0.5, 0.94, "Heartphase Version 0.0.1", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
-fig1.text(0.9, 0.9, f"Coherence score: {norm_plv_all:.18f}\nNumber of Heartbeats: {num_heartbeats}", ha='right', va='top', fontsize=14, color='gray', alpha=0.2)
+fig1.text(0.5, 0.94, "Heartphase Version 0.0.3", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
+fig1.text(0.9, 0.9, f"Coherence score: {norm_plv_all:.18f}\nTime-reversed coherence score: {reversed_norm_plv_all:.18f}\nNumber of Heartbeats: {num_heartbeats}", ha='right', va='top', fontsize=14, color='gray', alpha=0.2)
 fig1.text(0.5, 0.5, "♡Φ", ha='center', va='center', fontsize=344, color='gray', alpha=0.2, zorder=0)
 fig1.text(0.5, 0.2, "@Heartphase is Made for Life in Great Britain.", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
 plt.tight_layout()
@@ -194,8 +252,8 @@ fig2, (ax2, ax3, ax4) = plt.subplots(1, 3, figsize=(20, 8), subplot_kw={'project
 create_phase_space_plot(ax2, reconstructed_data, elev=20, azim=0, add_text=False)
 create_phase_space_plot(ax3, reconstructed_data, elev=20, azim=45, add_text=False)
 create_phase_space_plot(ax4, reconstructed_data, elev=20, azim=90, add_text=False)
-fig2.text(0.5, 0.94, "Heartphase Version 0.0.1", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
-fig2.text(0.9, 0.9, f"Coherence score: {norm_plv_all:.18f}\nNumber of Heartbeats: {num_heartbeats}", ha='right', va='top', fontsize=14, color='gray', alpha=0.2)
+fig2.text(0.5, 0.94, "Heartphase Version 0.0.3", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
+fig2.text(0.9, 0.9, f"Coherence score: {norm_plv_all:.18f}\nTime-reversed coherence score: {reversed_norm_plv_all:.18f}\nNumber of Heartbeats: {num_heartbeats}", ha='right', va='top', fontsize=14, color='gray', alpha=0.2)
 fig2.text(0.5, 0.5, "♡Φ", ha='center', va='center', fontsize=344, color='gray', alpha=0.2, zorder=0)
 fig2.text(0.5, 0.2, "@Heartphase is Made for Life in Great Britain.", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
 plt.tight_layout()
@@ -209,5 +267,12 @@ if heartbeat_segments:
     heartbeat_fig = plot_heartbeat_and_analytic_signal(first_heartbeat)
     heartbeat_fig.savefig('hilbert-transform.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
     print("Image 'hilbert-transform.png' has been saved.")
+
+    # Plot the time-reversed version of the first heartbeat
+    first_reversed_heartbeat = reversed_heartbeat_segments[0]
+    reversed_heartbeat_fig = plot_heartbeat_and_analytic_signal(first_reversed_heartbeat, title_prefix="Time-Reversed ")
+    reversed_heartbeat_fig.savefig('time-reversed-hilbert-transform.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
+    print("Image 'time-reversed-hilbert-transform.png' has been saved.")
 """
+
 plt.show()

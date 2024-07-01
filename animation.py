@@ -1,4 +1,5 @@
 """
+Heartphase 0.0.3
 Copyright (c) 2024 Declain P. Thomas
 Distributed under the MIT software license.
 """
