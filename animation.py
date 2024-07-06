@@ -1,5 +1,5 @@
 """
-Heartphase 0.0.3
+Heartphase 0.0.4
 Copyright (c) 2024 Declain P. Thomas
 Distributed under the MIT software license.
 """
@@ -47,7 +47,7 @@ if choice == '2' or choice == 'both':
 # Create a figure for plotting
 fig = plt.figure(figsize=(20, 10))
 plt.rcParams.update({'font.size': 8})
-fig.text(0.5, 0.94, "Heartphase Version 0.0.2", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
+fig.text(0.5, 0.94, "Heartphase Version 0.0.4", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
 fig.text(0.5, 0.5, "♡Φ", ha='center', va='center', fontsize=444, color='gray', alpha=0.2, zorder=0)
 fig.text(0.5, 0.04, "@Heartphase is Made for Life in Great Britain", ha='center', va='top', fontsize=14, color='gray', alpha=0.2)
 

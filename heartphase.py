@@ -1,5 +1,5 @@
 """
-Heartphase 0.0.3
+Heartphase 0.0.4
 Copyright (c) 2024 Declain P. Thomas
 Distributed under the MIT software license.
 """
@@ -239,7 +239,7 @@ reconstructed_data = phase_space_reconstruct(ecg_trace, dimension, time_delay)
 fig1 = plt.figure(figsize=(10, 8))
 ax1 = fig1.add_subplot(111, projection='3d')
 create_phase_space_plot(ax1, reconstructed_data, elev=20, azim=45)
-fig1.text(0.5, 0.94, "Heartphase Version 0.0.3", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
+fig1.text(0.5, 0.94, "Heartphase Version 0.0.4", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
 fig1.text(0.9, 0.9, f"Coherence score: {norm_plv_all:.18f}\nTime-reversed coherence score: {reversed_norm_plv_all:.18f}\nNumber of Heartbeats: {num_heartbeats}", ha='right', va='top', fontsize=14, color='gray', alpha=0.2)
 fig1.text(0.5, 0.5, "♡Φ", ha='center', va='center', fontsize=344, color='gray', alpha=0.2, zorder=0)
 fig1.text(0.5, 0.2, "@Heartphase is Made for Life in Great Britain.", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
@@ -252,7 +252,7 @@ fig2, (ax2, ax3, ax4) = plt.subplots(1, 3, figsize=(20, 8), subplot_kw={'project
 create_phase_space_plot(ax2, reconstructed_data, elev=20, azim=0, add_text=False)
 create_phase_space_plot(ax3, reconstructed_data, elev=20, azim=45, add_text=False)
 create_phase_space_plot(ax4, reconstructed_data, elev=20, azim=90, add_text=False)
-fig2.text(0.5, 0.94, "Heartphase Version 0.0.3", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
+fig2.text(0.5, 0.94, "Heartphase Version 0.0.4", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
 fig2.text(0.9, 0.9, f"Coherence score: {norm_plv_all:.18f}\nTime-reversed coherence score: {reversed_norm_plv_all:.18f}\nNumber of Heartbeats: {num_heartbeats}", ha='right', va='top', fontsize=14, color='gray', alpha=0.2)
 fig2.text(0.5, 0.5, "♡Φ", ha='center', va='center', fontsize=344, color='gray', alpha=0.2, zorder=0)
 fig2.text(0.5, 0.2, "@Heartphase is Made for Life in Great Britain.", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
