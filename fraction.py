@@ -166,9 +166,6 @@ peaks = find_heartbeats(ecg_trace, sampling_rate)
 num_heartbeats = len(peaks)
 print(f"Number of detected heartbeats: {num_heartbeats}")
 
-# Segment the data into heartbeats and create time-reversed versions
-heartbeat_segments, reversed_heartbeat_segments = segment_heartbeats(ecg_trace, peaks, 2 * sampling_rate // 2)  # 1-second window
-
 # Parameters for phase space reconstruction
 dimension = 3
 time_delay = 20
