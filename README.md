@@ -13,7 +13,7 @@ Heartphase 0.0.5 has three main files:
 
 As of Heartphase 0.0.3, Heartphase (`heartphase.py`) includes Conjugation, which time-reverses each segmented heartbeat and computes the coherence score for each time-reversed pair. These time-reversed coherence scores serve to confirm the coherence scores of the original heartbeats.
 
-The code is experimental and needs several improvements, e.g. more robust heartbeat segmentation and component detection. The two ECG samples (`ecg-sample.csv` and `ecg-sample.csv`) can be used to used to demo the code. 
+The code is experimental and needs several improvements, e.g. more robust heartbeat segmentation and component detection. The two ECG samples (`ecg-sample.csv` and `ecg-sample.csv`) can be used to used to demo the code. As of Heartphase 0.0.5, `ecg-sample-pqrst.csv` is included as an example of an ECG labelled using `selection.py`.
 
 To run the code, make sure you have installed the dependencies:
 
