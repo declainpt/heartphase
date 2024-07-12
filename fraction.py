@@ -1,8 +1,9 @@
 """
-Heartphase 0.0.4
+Heartphase 0.0.5
 Copyright (c) 2024 Declain P. Thomas
 Distributed under the MIT software license.
 """
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -176,7 +177,7 @@ reconstructed_data = phase_space_reconstruct(ecg_trace, dimension, time_delay)
 # Create the interactive plot
 fig = plt.figure(figsize=(12, 10))
 create_interactive_plots(fig, reconstructed_data, ecg_trace, peaks, elev=20, azim=45)
-fig.text(0.5, 0.94, "Heartphase Version 0.0.4", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
+fig.text(0.5, 0.94, "Heartphase Version 0.0.5", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
 # fig.text(0.98, 0.98, f"Number of Heartbeats: {num_heartbeats}", ha='right', va='top', fontsize=14, color='gray', alpha=0.2)
 fig.text(0.5, 0.5, "♡Φ", ha='center', va='center', fontsize=344, color='gray', alpha=0.2, zorder=0)
 fig.text(0.5, 0.2, "@Heartphase is Made for Life in Great Britain.", ha='center', va='bottom', fontsize=14, color='gray', alpha=0.2)
