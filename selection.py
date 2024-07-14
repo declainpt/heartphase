@@ -1,5 +1,5 @@
 """
-Heartphase 0.0.5
+Heartphase 0.0.6
 Copyright (c) 2024 Declain P. Thomas
 Distributed under the MIT software license.
 """

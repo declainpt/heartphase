@@ -4,7 +4,7 @@
 
 #### Code
 
-Heartphase 0.0.5 has three main files:
+Heartphase 0.0.6 has three main files:
 
 * `heartphase.py` — Reconstructs a 3D phase space portrait and computes a coherence score.
 * `animation.py` — Animates the raw ECG and the 3D phase space portrait in synchrony.
@@ -12,6 +12,8 @@ Heartphase 0.0.5 has three main files:
 * `selection.py` — Simple tool for manual labelling of PQRST components in ECG.
 
 As of Heartphase 0.0.3, Heartphase (`heartphase.py`) includes Conjugation, which time-reverses each segmented heartbeat and computes the coherence score for each time-reversed pair. These time-reversed coherence scores serve to confirm the coherence scores of the original heartbeats.
+
+As of Heartphase 0.0.6, Fraction (`fraction.py`) only loads an ECG labelled using Selection (`selection.py`) in order to highlight the P-wave, QRS-complex and T-wave of a selected heartbeat.
 
 The code is experimental and needs several improvements, e.g. more robust heartbeat segmentation and component detection. The two ECG samples (`ecg-sample.csv` and `ecg-sample.csv`) can be used to used to demo the code. As of Heartphase 0.0.5, `ecg-sample-pqrst.csv` is included as an example of an ECG labelled using `selection.py`.
 
@@ -46,9 +48,10 @@ Supplements:
 * [Supplement 2 — Conjugation](https://www.heartphase.com/supplements/9c3641b2c4fa9ffa47d6c6c081a2e61ad18db747ba1307eaf33303aba1f5d669.pdf): Provides context for Conjugation.
 * [Supplement 3 — Fraction](https://www.heartphase.com/supplements/9c221fc7eb1c0da714e1e69d72e532c201c28a0eb964b955db8fcdb00438f354.pdf): Provides context for `fraction.py`.
 * [Supplement 4 — Selection](https://www.heartphase.com/supplements/832990a791093f1cf22a72d3535a8df491dc9c1bb666902ed0201ad2aba2c953.pdf): Provides context for `selection.py`.
+* [Supplement 5 — Fraction 2](https://www.heartphase.com/supplements/cd7ad52ce06a3b7ffcba14169cb9380330c4e22e94df4c49b9da32a2af55e84c.pdf): Provides context for an update to `fraction.py`.
 
 #### License and contribution
-Heartphase 0.0.5 is released under the terms of the MIT license. Contributors are welcomed.
+Heartphase 0.0.6 is released under the terms of the MIT license. Contributors are welcomed.
 
 #### Contact
 Follow [@Heartphase](https://x.com/heartphase) (and [@declainpt](https://x.com/declainpt)) on 𝕏.
