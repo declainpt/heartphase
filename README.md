@@ -4,12 +4,13 @@
 
 #### Code
 
-Heartphase 0.0.6 has three main files:
+Heartphase 0.0.7 has five main files:
 
 * `heartphase.py` — Reconstructs a 3D phase space portrait and computes a coherence score.
 * `animation.py` — Animates the raw ECG and the 3D phase space portrait in synchrony.
 * `fraction.py` — Isolates and animates a selected heartbeat in the 3D phase space portrait.
 * `selection.py` — Simple tool for manual labelling of PQRST components in ECG.
+* `variation.py` — Computes the variance of all features (waveforms, segments and intervals) of all heartbeats.
 
 As of Heartphase 0.0.3, Heartphase (`heartphase.py`) includes Conjugation, which time-reverses each segmented heartbeat and computes the coherence score for each time-reversed pair. These time-reversed coherence scores serve to confirm the coherence scores of the original heartbeats.
 
@@ -49,9 +50,10 @@ Supplements:
 * [Supplement 3 — Fraction](https://www.heartphase.com/supplements/9c221fc7eb1c0da714e1e69d72e532c201c28a0eb964b955db8fcdb00438f354.pdf): Provides context for `fraction.py`.
 * [Supplement 4 — Selection](https://www.heartphase.com/supplements/832990a791093f1cf22a72d3535a8df491dc9c1bb666902ed0201ad2aba2c953.pdf): Provides context for `selection.py`.
 * [Supplement 5 — Fraction 2](https://www.heartphase.com/supplements/cd7ad52ce06a3b7ffcba14169cb9380330c4e22e94df4c49b9da32a2af55e84c.pdf): Provides context for an update to `fraction.py`.
+* [Supplement 6 — Variation](https://www.heartphase.com/supplements/f483117d718570970e834e4e4b900dee3addfb720ebaf88f1fe45e247dc3923b.pdf): Provides context for `variation.py`.
 
 #### License and contribution
-Heartphase 0.0.6 is released under the terms of the MIT license. Contributors are welcomed.
+Heartphase 0.0.7 is released under the terms of the MIT license. Contributors are welcomed.
 
 #### Contact
 Follow [@Heartphase](https://x.com/heartphase) (and [@declainpt](https://x.com/declainpt)) on 𝕏.
