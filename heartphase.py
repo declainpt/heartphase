@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 ecg_data = pd.read_csv('ecg-sample.csv')
 ecg_trace = ecg_data.iloc[:, 0].values
 
-sampling_rate = 512  # Hz
+sampling_rate = 512 
 
 def find_heartbeats(ecg_trace, sampling_rate):
     distance = sampling_rate // 2 
@@ -29,7 +29,6 @@ def segment_heartbeats(ecg_trace, peaks, window_size):
     reversed_segments = [seg[::-1] for seg in segments] 
     return segments, reversed_segments
 
-# Compute pairwise phase locking value (PLV) of analytic signals of segmented heartbeats (after Hilbert transform)
 def compute_phase_diff(signal1, signal2):
     analytic_signal1 = signal.hilbert(signal1)
     analytic_signal2 = signal.hilbert(signal2)
@@ -72,7 +71,6 @@ def create_phase_space_plot(ax, reconstructed_data, elev, azim, add_text=True):
     ax.view_init(elev=elev, azim=azim)
 
 """
-# Plot Hilbert transform
 def plot_heartbeat_and_analytic_signal(heartbeat, title_prefix=""):
     analytic_signal = signal.hilbert(heartbeat)
     instantaneous_phase = np.unwrap(np.angle(analytic_signal))
@@ -82,14 +80,12 @@ def plot_heartbeat_and_analytic_signal(heartbeat, title_prefix=""):
     fig = plt.figure(figsize=(15, 10))
     gs = fig.add_gridspec(2, 3)
     
-    # Raw signal
     ax1 = fig.add_subplot(gs[0, 0])
     ax1.plot(t, heartbeat, label='Raw signal', color='black')
     ax1.set_ylabel('Amplitude')
     ax1.set_title(f'{title_prefix}Raw ECG Signal')
     ax1.legend()
     
-    # Analytic signal
     ax2 = fig.add_subplot(gs[0, 1])
     ax2.plot(t, np.real(analytic_signal), label='Real part', color='black')
     ax2.plot(t, np.imag(analytic_signal), label='Imaginary part', color='green')
@@ -97,7 +93,6 @@ def plot_heartbeat_and_analytic_signal(heartbeat, title_prefix=""):
     ax2.set_title(f'{title_prefix}Analytic Signal')
     ax2.legend()
     
-    # Instantaneous phase
     ax3 = fig.add_subplot(gs[1, 0])
     ax3.plot(t, instantaneous_phase, label='Instantaneous phase', color='blue')
     ax3.set_xlabel('Time (s)')
@@ -105,7 +100,6 @@ def plot_heartbeat_and_analytic_signal(heartbeat, title_prefix=""):
     ax3.set_title(f'{title_prefix}Instantaneous Phase')
     ax3.legend()
     
-    # Amplitude envelope
     ax4 = fig.add_subplot(gs[1, 1])
     ax4.plot(t, amplitude_envelope, label='Amplitude envelope', color='red')
     ax4.set_xlabel('Time (s)')
@@ -113,15 +107,13 @@ def plot_heartbeat_and_analytic_signal(heartbeat, title_prefix=""):
     ax4.set_title(f'{title_prefix}Amplitude Envelope')
     ax4.legend()
     
-    # Polar plot
     ax5 = fig.add_subplot(gs[:, 2], projection='polar')
     theta = instantaneous_phase
     r = amplitude_envelope
     ax5.plot(theta, r, color='black')
     ax5.set_title(f'{title_prefix}Polar Plot of Analytic Signal')
-    ax5.set_rticks([])  # Remove radial ticks
-    
-    # Remove top and right spines, set bottom and left spines to gray
+    ax5.set_rticks([])
+   
     for ax in [ax1, ax2, ax3, ax4]:
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
@@ -133,17 +125,13 @@ def plot_heartbeat_and_analytic_signal(heartbeat, title_prefix=""):
     return fig
 """
 
-# Find peaks in the ECG data
 peaks = find_heartbeats(ecg_trace, sampling_rate)
 
-# Print the number of detected heartbeats
 num_heartbeats = len(peaks)
 print(f"Number of detected heartbeats: {num_heartbeats}")
 
-# Segment the data into heartbeats and create time-reversed versions
-heartbeat_segments, reversed_heartbeat_segments = segment_heartbeats(ecg_trace, peaks, 2 * sampling_rate // 2)  # 1-second window
+heartbeat_segments, reversed_heartbeat_segments = segment_heartbeats(ecg_trace, peaks, 2 * sampling_rate // 2)
 
-# Calculate raw and normalised PLV for all pairs of normal heartbeats
 all_raw_plvs = []
 all_norm_plvs = []
 for i in range(len(heartbeat_segments)):
@@ -154,7 +142,6 @@ for i in range(len(heartbeat_segments)):
         all_raw_plvs.append(raw)
         all_norm_plvs.append(norm)
 
-# Compute overall raw and normalised PLV for normal heartbeats
 overall_phase_diff = []
 for i in range(len(heartbeat_segments) - 1):
     for j in range(i + 1, len(heartbeat_segments)):
@@ -165,14 +152,12 @@ overall_phase_diff = np.array(overall_phase_diff)
 raw_plv_all = raw_plv(overall_phase_diff)
 norm_plv_all = normalised_plv(overall_phase_diff, num_heartbeats)
 
-# Print the raw and normalised PLVs for normal heartbeats
 print("Normal Heartbeats:")
 print(f"Raw PLV for each pair of heartbeats: {all_raw_plvs}")
 print(f"Normalised PLV for each pair of heartbeats: {all_norm_plvs}")
 print(f"Overall raw PLV for all heartbeats: {raw_plv_all}")
 print(f"Overall normalised PLV for all heartbeats: {norm_plv_all}")
 
-# Calculate raw and normalised PLV for all pairs of time-reversed heartbeats
 reversed_all_raw_plvs = []
 reversed_all_norm_plvs = []
 for i in range(len(reversed_heartbeat_segments)):
@@ -183,7 +168,6 @@ for i in range(len(reversed_heartbeat_segments)):
         reversed_all_raw_plvs.append(raw)
         reversed_all_norm_plvs.append(norm)
 
-# Compute overall raw and normalised PLV for time-reversed heartbeats
 reversed_overall_phase_diff = []
 for i in range(len(reversed_heartbeat_segments) - 1):
     for j in range(i + 1, len(reversed_heartbeat_segments)):
@@ -194,7 +178,6 @@ reversed_overall_phase_diff = np.array(reversed_overall_phase_diff)
 reversed_raw_plv_all = raw_plv(reversed_overall_phase_diff)
 reversed_norm_plv_all = normalised_plv(reversed_overall_phase_diff, num_heartbeats)
 
-# Print the raw and normalised PLVs for time-reversed heartbeats
 print("\nTime-Reversed Heartbeats:")
 print(f"Raw PLV for each pair of time-reversed heartbeats: {reversed_all_raw_plvs}")
 print(f"Normalised PLV for each pair of time-reversed heartbeats: {reversed_all_norm_plvs}")
@@ -228,14 +211,22 @@ if are_plvs_equal(norm_plv_all, reversed_norm_plv_all):
 else:
     print(f"Overall normalized PLVs differ: Normal = {norm_plv_all:.15f}, Reversed = {reversed_norm_plv_all:.15f}")
 
-# Parameters for phase space reconstruction
+
+"""
+
+The Heartphase time delay follows the pattern: X(t), X(t+T), X(t+2T). 
+The time delay is defined in samples, not directly in time.
+By convention, the time delay T is set to 20 samples i.e. X(t+T) is the ECG shifted by 20 samples; X(t+2T) is the ECG shifted by 40 samples.
+Apple Watch ECGs have a 512Hz sampling rate so the time delay with T=20 is about 40 milliseconds.
+Changing the arbitrary value from 20 to an arbitrary number is possible, but it will affect the shape of the phase portrait.
+
+"""
+
 dimension = 3
 time_delay = 20
 
-# Perform phase space reconstruction
 reconstructed_data = phase_space_reconstruct(ecg_trace, dimension, time_delay)
 
-# Create the first figure with a single phase portrait
 fig1 = plt.figure(figsize=(10, 8))
 ax1 = fig1.add_subplot(111, projection='3d')
 create_phase_space_plot(ax1, reconstructed_data, elev=20, azim=45)
@@ -247,7 +238,6 @@ plt.tight_layout()
 plt.savefig('heartphase-single.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
 print("Image 'heartphase-single.png' has been saved.")
 
-# Create the second figure with three phase portraits
 fig2, (ax2, ax3, ax4) = plt.subplots(1, 3, figsize=(20, 8), subplot_kw={'projection': '3d'})
 create_phase_space_plot(ax2, reconstructed_data, elev=20, azim=0, add_text=False)
 create_phase_space_plot(ax3, reconstructed_data, elev=20, azim=45, add_text=False)
@@ -261,14 +251,12 @@ plt.savefig('heartphase-triple.png', dpi=300, bbox_inches='tight', pad_inches=0.
 print("Image 'heartphase-triple.png' has been saved.")
 
 """
-# Plot the first heartbeat and its analytic signal
 if heartbeat_segments:
     first_heartbeat = heartbeat_segments[0]
     heartbeat_fig = plot_heartbeat_and_analytic_signal(first_heartbeat)
     heartbeat_fig.savefig('hilbert-transform.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
     print("Image 'hilbert-transform.png' has been saved.")
 
-    # Plot the time-reversed version of the first heartbeat
     first_reversed_heartbeat = reversed_heartbeat_segments[0]
     reversed_heartbeat_fig = plot_heartbeat_and_analytic_signal(first_reversed_heartbeat, title_prefix="Time-Reversed ")
     reversed_heartbeat_fig.savefig('time-reversed-hilbert-transform.png', dpi=300, bbox_inches='tight', pad_inches=0.1)
