@@ -51,7 +51,7 @@ Supplements:
 * [Supplement 4 — Selection](https://www.heartphase.com/supplements/832990a791093f1cf22a72d3535a8df491dc9c1bb666902ed0201ad2aba2c953.pdf): Provides context for `selection.py`.
 * [Supplement 5 — Fraction 2](https://www.heartphase.com/supplements/cd7ad52ce06a3b7ffcba14169cb9380330c4e22e94df4c49b9da32a2af55e84c.pdf): Provides context for an update to `fraction.py`.
 * [Supplement 6 — Variation](https://www.heartphase.com/supplements/f483117d718570970e834e4e4b900dee3addfb720ebaf88f1fe45e247dc3923b.pdf): Provides context for `variation.py`.
-* [Supplement 7 — Variation](https://www.heartphase.com/supplements/350bf51d3c27a4460d3e58754a7b4ebcbfc29e019f4923ab85bbe97f3e01d81b.pdf): Provides context for `variation.py`.
+* [Supplement 7 — Atrial Fibrillation](https://www.heartphase.com/supplements/350bf51d3c27a4460d3e58754a7b4ebcbfc29e019f4923ab85bbe97f3e01d81b.pdf): Provides context for Heartphases with Atrial Fibrillation (AFib).
 
 #### License and contribution
 Heartphase 0.0.7 is released under the terms of the MIT license. Contributors are welcomed.
