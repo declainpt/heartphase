@@ -1,4 +1,4 @@
-# Heartphase: A coherence standard
+# Heartphase: A cardiac coherence standard
 
 [Heartphase](https://heartphase.com) takes a raw Lead I ECG (from an Apple Watch) then reconstructs a 3D phase space portrait and computes a coherence score, providing visual and numerical feedback about the degree of coherence between all heartbeats in the ECG.
 
